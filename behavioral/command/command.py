@@ -1,72 +1,79 @@
 from abc import ABC, abstractmethod
+from random import random
+
 
 class Command(ABC):
-    def __init__(self, app, editor):
-        self._app = app
-        self._editor = editor
-        self._backup = ''
-
-
-    def save_backup(self):
-        self._backup = self._editor.text
-
-    def undo(self):
-        self._editor.text = self._backup
+    def __init__(self, receiver, input_str):
+        self.receiver = receiver
+        self.input_str = input_str
 
     @abstractmethod
     def execute(self):
         pass
 
 
-class CopyCommand(Command):
-    def __init__(self, app, editor):
-        super(CopyCommand, self).__init__(app, editor)
+class PrintOnce(Command):
+    def __init__(self, receiver, input_str):
+        super(PrintOnce, self).__init__(receiver, input_str)
+        self.num_iter = 1
 
     def execute(self):
-        self._app.clipboard = self._editor.get_selection()
-        return False
+        self.receiver.print_header()
+        self.receiver.print_string(self.input_str, self.num_iter)
+        self.receiver.print_header()
 
 
-class CutCommand(Command):
-    def __init__(self, app, editor):
-        super(CutCommand, self).__init__(app, editor)
-
-    def execute(self):
-        self.save_backup()
-        self._app.clipboard = self._editor.get_selection()
-        self._editor.delete_selection()
-        return True
-
-
-class PasteCommand(Command):
-    def __init__(self, app, editor):
-        super(PasteCommand, self).__init__(app, editor)
+class PrintTwice(Command):
+    def __init__(self, receiver, input_str):
+        super(PrintTwice, self).__init__(receiver, input_str)
+        self.num_iter = 2
 
     def execute(self):
-        self.save_backup()
-        self._editor.replace_selection(self._app.clipboard)
-        return True
+        self.receiver.print_header()
+        self.receiver.print_header()
+        self.receiver.print_string(self.input_str, self.num_iter)
+        self.receiver.print_header()
+        self.receiver.print_header()
 
 
-class UndoCommand(Command):
-    def __init__(self, app, editor):
-        super(UndoCommand, self).__init__(app, editor)
+class Receiver:
+    def print_header(self):
+        print("================")
 
-    def execute(self):
-        self._app.undo()
-        return False
+    def print_string(self, input_str, num_iter):
+        for _ in range(num_iter):
+            print(input_str)
 
 
-class CommandHistory:
-    def __init__(self):
-        self.__command_hist = []
+class Sender:
+    def set_command(self, command):
+        self.command = command
 
-    def push(self, c):
-        self.__command_hist.append(c)
+    def execute_command(self):
+        self.command.execute()
 
-    def pop(self):
-        if len(self.__command_hist) > 0:
-            return self.__command_hist.pop(-1)
+
+class Client:
+    def __init__(self, input_str):
+        receiver = Receiver()
+        self.print_once = PrintOnce(receiver, input_str)
+        self.print_twice = PrintTwice(receiver, input_str)
+
+
+if __name__ == "__main__":
+    client = Client("Design Pattern!!")
+
+    single_printer = Sender()
+    single_printer.set_command(client.print_once)
+    double_printer = Sender()
+    double_printer.set_command(client.print_twice)
+
+    rand = int(random() * 10) % 2
+
+    if rand:
+        single_printer.execute_command()
+    else:
+        double_printer.execute_command()
 
 
 
