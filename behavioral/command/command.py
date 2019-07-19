@@ -46,34 +46,25 @@ class Receiver:
 
 
 class Sender:
+    def __init__(self):
+        self.command = []
     def set_command(self, command):
-        self.command = command
+        self.command.append(command)
 
-    def execute_command(self):
-        self.command.execute()
+    def execute_command(self, idx):
+        self.command[idx].execute()
 
 
 class Client:
     def __init__(self, input_str):
         receiver = Receiver()
-        self.print_once = PrintOnce(receiver, input_str)
-        self.print_twice = PrintTwice(receiver, input_str)
+        self.printer = Sender()
+        self.printer.set_command(PrintOnce(receiver, input_str))
+        self.printer.set_command(PrintTwice(receiver, input_str))
 
 
 if __name__ == "__main__":
     client = Client("Design Pattern!!")
 
-    single_printer = Sender()
-    single_printer.set_command(client.print_once)
-    double_printer = Sender()
-    double_printer.set_command(client.print_twice)
-
     rand = int(random() * 10) % 2
-
-    if rand:
-        single_printer.execute_command()
-    else:
-        double_printer.execute_command()
-
-
-
+    client.printer.execute_command(rand)
