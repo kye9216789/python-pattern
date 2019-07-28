@@ -17,9 +17,6 @@ class WorkerState(ABC):
     def sleep(self):
         pass
 
-    def change_state(self, state):
-        self.worker.state = state(self.worker)
-
 
 class Fine(WorkerState):
     def __init__(self, worker):
@@ -58,9 +55,9 @@ class Bad(WorkerState):
         print("zzz...")
 
 
-class Coder(WorkerState):
+class Coding(WorkerState):
     def __init__(self, worker):
-        super(Coder, self).__init__(worker)
+        super(Coding, self).__init__(worker)
         self.worker.tired = 10
 
     def drink_coffee(self):
@@ -72,9 +69,6 @@ class Coder(WorkerState):
     def sleep(self):
         print(f"{self.worker.name} wants some more coffee...")
 
-    def change_state(self, state):
-        print("Can not exit from Coder state")
-
 
 class Person:
     def __init__(self, name, state):
@@ -83,7 +77,7 @@ class Person:
         self.tired = 0
 
     def change_state(self, state):
-        if not isinstance(self.state, Coder):
+        if not isinstance(self.state, Coding):
             self.state = state(self)
 
     def drink_coffee(self):
@@ -98,7 +92,7 @@ class Person:
 
 officer = Person("Alexa", Fine)
 
-coder = Person("Bob", Coder)
+coder = Person("Bob", Coding)
 
 work_days = 10
 
