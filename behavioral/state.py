@@ -33,8 +33,8 @@ class Fine(WorkerState):
         print(f"{self.worker.name} wants some sleep")
 
     def sleep(self):
-        self.tired = 0
         print("Good night!")
+        self.tired = 0
 
 
 class Bad(WorkerState):
@@ -50,9 +50,9 @@ class Bad(WorkerState):
         print(f"{self.worker.name} wants sleep")
 
     def sleep(self):
-        self.worker.tired = 0
         self.worker.change_state(Fine)
         print("zzz...")
+        self.worker.tired = 0
 
 
 class Coding(WorkerState):
@@ -90,24 +90,30 @@ class Person:
         self.state.sleep()
 
 
-officer = Person("Alexa", Fine)
+def main():
 
-coder = Person("Bob", Coding)
+    officer = Person("Alexa", Fine)
 
-work_days = 10
+    coder = Person("Bob", Coding)
 
-for _ in range(work_days):
-    officer.do_work()
-    officer.do_work()
-    coder.do_work()
-    coder.do_work()
+    work_days = 10
+
+    for _ in range(work_days):
+        officer.do_work()
+        officer.do_work()
+        coder.do_work()
+        coder.do_work()
+        officer.drink_coffee()
+        coder.drink_coffee()
+
+    officer.sleep()
+    coder.sleep()
+
     officer.drink_coffee()
-    coder.drink_coffee()
 
-officer.sleep()
-coder.sleep()
+    coder.change_state(Fine)
+    coder.sleep()
 
-officer.drink_coffee()
 
-coder.change_state(Fine)
-coder.sleep()
+if __name__ == "__main__":
+    main()
