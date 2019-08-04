@@ -30,7 +30,7 @@ class Fine(WorkerState):
         self.worker.tired += 1
         if self.worker.tired > 5:
             self.worker.change_state(Bad)
-        print(f"{self.worker.name} wants some sleep")
+        print(f"{self.worker.name} wants to sleep")
 
     def sleep(self):
         print("Good night!")
@@ -43,11 +43,11 @@ class Bad(WorkerState):
 
     def drink_coffee(self):
         self.worker.tired += 1
-        print(f"{self.worker.name} wants sleep")
+        print(f"{self.worker.name} wants to sleep")
 
     def do_work(self):
         self.worker.tired += 3
-        print(f"{self.worker.name} wants sleep")
+        print(f"{self.worker.name} wants to sleep")
 
     def sleep(self):
         self.worker.change_state(Fine)
@@ -91,11 +91,8 @@ class Person:
 
 
 def main():
-
     officer = Person("Alexa", Fine)
-
     coder = Person("Bob", Coding)
-
     work_days = 10
 
     for _ in range(work_days):
@@ -108,7 +105,6 @@ def main():
 
     officer.sleep()
     coder.sleep()
-
     officer.drink_coffee()
 
     coder.change_state(Fine)
