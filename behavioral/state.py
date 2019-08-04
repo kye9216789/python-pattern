@@ -50,8 +50,8 @@ class Bad(WorkerState):
         print(f"{self.worker.name} wants to sleep")
 
     def sleep(self):
-        self.worker.change_state(Fine)
         print("zzz...")
+        self.worker.change_state(Fine)
         self.worker.tired = 0
 
 
