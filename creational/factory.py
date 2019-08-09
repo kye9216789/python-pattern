@@ -1,43 +1,47 @@
 from abc import ABC, abstractmethod
 
 
-class ControlerFactory(ABC):
+class ControllerFactory(ABC):
 
     def __init__(self, creator_id):
         self.id = creator_id
 
-    @abstractmethod
-    def create_object(self, channel):
-        pass
+    def create_object(self, channel=None):
+        if channel is not None:
+            return WirelessController(channel)
+        else:
+            return WireController()
 
 
-class AbstractControler(ABC):
-
-    def __init__(self, channel):
-        self.channel = channel
+class AbstractController(ABC):
 
     @abstractmethod
     def control(self):
         pass
 
 
-class WirelessControlerFactory(ControlerFactory):
+class WirelessController(AbstractController):
 
-    def __init__(self, creator_id):
-        super().__init__(creator_id)
+    def __init__(self, channel):
+        self.channel = channel
+        print(f"This is wireless controller. Channel number is {self.channel}")
 
-    def create_object(self, channel):
-        return WirelessControler(channel)
+    def control(self):
+        print("I can control any objects")
 
 
-class WireControlerFactory(ControlerFactory):
+class WireController(AbstractController):
 
-    def __init__(self, creator_id):
-        super().__init__(creator_id)
+    def __init__(self):
+        print(f"This is wire controller. Channel number is not nedded")
 
-    def create_object(self, channel):
-        return WireControler(channel)
+    def control(self):
+        print("I can control objects that has an outlet")
 
-class WirelessControler(AbstractControler):
 
-class WireControler(AbstractControler):
+if __name__ == "__main__":
+    print("I need wireless controller")
+    controller_a = ControllerFactory('abc').create_object(10)
+
+    print("I need wire controller")
+    controller_b = ControllerFactory('efg').create_object()
