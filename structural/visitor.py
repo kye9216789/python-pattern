@@ -50,4 +50,16 @@ class AbstractVisitor(ABC):
 
 class CvtBbox(AbstractVisitor):
 
-    def
+    def visit_bbox_holder(self, bbox_holder):
+        xywh = []
+        for coord in bbox_holder.coords:
+            x1, y1, x2, y2 = coord
+            x = (x1 + x2) // 2
+            y = (y1 + y2) // 2
+            w = x2 - x1
+            h = y2 - y1
+            xywh.append([x, y, w, h])
+        return xywh
+
+    def visit_keypoint_holder(self, keypoint_holder):
+        
