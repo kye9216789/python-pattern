@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class ControllerFactory(ABC):
+class ControllerFactory:
 
     def __init__(self, creator_id):
         self.id = creator_id
