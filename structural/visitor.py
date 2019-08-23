@@ -1,65 +1,110 @@
 from abc import ABC, abstractmethod
 
 
-class AbstractCoordHolder(ABC):
-
-    @abstractmethod
-    def accept(self, visitor):
-        pass
-
-
-class BBoxHolder(AbstractCoordHolder):
-
-    def __init__(self, bbox_coords):
-        for coord in bbox_coords:
-            x1, y1, x2, y2 = coord
-            assert (x1 < x2) & (y1 < y2)
-        self.coords = bbox_coords
+class AbstractSeller(ABC):
 
     def accept(self, visitor):
         visitor.visit(self)
 
 
-class KeypointHolder(AbstractCoordHolder):
+class BreadSeller(AbstractSeller):
 
-    def __init__(self, keypoint_coords):
-        for coords in keypoint_coords:
-            assert len(coords) == len(keypoint_coords[0])
-        self.coord = keypoint_coords
+    def __init__(self):
+        self.money = 0
+        self.bread_price = 5000
 
-    def accept(self, visitor):
-        visitor.visit(self)
+
+class PhoneSeller(AbstractSeller):
+
+    def __init__(self):
+        self.money = 500000
+        self.phone_price = 1000000
 
 
 class AbstractVisitor(ABC):
 
-    def visit(self, coord_holder):
-        if isinstance(coord_holder, BBoxHolder):
-            self.visit_bbox_holder(coord_holder)
-        elif isinstance(coord_holder, KeypointHolder):
-            self.visit_keypoint_holder(coord_holder)
+    def visit(self, seller):
+        if isinstance(seller, BreadSeller):
+            self.visit_bread(seller)
+        elif isinstance(seller, PhoneSeller):
+            self.visit_phone(seller)
 
     @abstractmethod
-    def visit_bbox_holder(self, bbox_holder):
+    def visit_bread(self, seller):
         pass
 
     @abstractmethod
-    def visit_keypoint_holder(self, keypoint_holder):
+    def visit_phone(self, seller):
         pass
 
 
-class CvtBbox(AbstractVisitor):
+class Buyer(AbstractVisitor):
 
-    def visit_bbox_holder(self, bbox_holder):
-        xywh = []
-        for coord in bbox_holder.coords:
-            x1, y1, x2, y2 = coord
-            x = (x1 + x2) // 2
-            y = (y1 + y2) // 2
-            w = x2 - x1
-            h = y2 - y1
-            xywh.append([x, y, w, h])
-        return xywh
+    def __init__(self, money=10000):
+        self.money = money
+        self.num_goods = 0
 
-    def visit_keypoint_holder(self, keypoint_holder):
-        
+    def visit_bread(self, seller):
+        if seller.bread_price < self.money:
+            self.money -= seller.bread_price
+            seller.money += seller.bread_price
+            self.num_goods += 1
+            print("I bought a bread.")
+        else:
+            print("Too expensive. I have not enought money.")
+
+    def visit_phone(self, seller):
+        if seller.phone_price < self.money:
+            self.money -= seller.phone_price
+            seller.money += seller.phone_price
+            self.num_goods += 1
+            print("I bought a cell phone.")
+        else:
+            print("Too expensive. I have not enought money.")
+
+
+class TaxCollector(AbstractVisitor):
+    def __init__(self):
+        self.money = 0
+        self.sales_achievements = 0
+
+    def visit_bread(self, seller):
+        if seller.money > 0:
+            self.money += seller.money // 10
+            seller.money -= seller.money // 10
+            print(f"I took tax : {seller.money // 10}.")
+        else:
+            print("You don`t have money.")
+
+    def visit_phone(self, seller):
+        if seller.money > 0:
+            self.money += seller.money // 5
+            seller.money -= seller.money // 5
+            print(f"I took tax : {seller.money // 5}.")
+        else:
+            print("You don`t have money.")
+
+
+def main():
+
+    poor = Buyer(1000)
+    rich = Buyer(100000000)
+
+    gangster =TaxCollector()
+
+    bread_seller = BreadSeller()
+    phone_seller = PhoneSeller()
+
+    bread_seller.accept(gangster)
+    phone_seller.accept(gangster)
+
+    bread_seller.accept(poor)
+    phone_seller.accept(rich)
+
+    bread_seller.accept(gangster)
+    phone_seller.accept(gangster)
+
+
+
+if __name__ == "__main__":
+    main()
