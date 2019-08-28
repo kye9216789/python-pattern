@@ -10,14 +10,14 @@ class AbstractSeller(ABC):
 class BreadSeller(AbstractSeller):
 
     def __init__(self):
-        self.money = 0
+        self.money_earned = 0
         self.bread_price = 5000
 
 
 class PhoneSeller(AbstractSeller):
 
     def __init__(self):
-        self.money = 500000
+        self.money_earned = 500000
         self.phone_price = 1000000
 
 
@@ -47,40 +47,40 @@ class Buyer(AbstractVisitor):
     def visit_bread(self, seller):
         if seller.bread_price < self.money:
             self.money -= seller.bread_price
-            seller.money += seller.bread_price
+            seller.money_earned += seller.bread_price
             self.num_goods += 1
-            print("I bought a bread.")
+            print("I bought bread.")
         else:
-            print("Too expensive. I have not enought money.")
+            print("Too expensive. I don`t have enought money.")
 
     def visit_phone(self, seller):
         if seller.phone_price < self.money:
             self.money -= seller.phone_price
-            seller.money += seller.phone_price
+            seller.money_earned += seller.phone_price
             self.num_goods += 1
             print("I bought a cell phone.")
         else:
-            print("Too expensive. I have not enought money.")
+            print("Too expensive. I don`t have enought money.")
 
 
-class TaxCollector(AbstractVisitor):
+class Gangster(AbstractVisitor):
+
     def __init__(self):
         self.money = 0
-        self.sales_achievements = 0
 
     def visit_bread(self, seller):
-        if seller.money > 0:
-            self.money += seller.money // 10
-            seller.money -= seller.money // 10
-            print(f"I took tax : {seller.money // 10}.")
+        if seller.money_earned > 0:
+            self.money += seller.money_earned // 10
+            seller.money_earned -= seller.money_earned // 10
+            print(f"I just took tax : {seller.money_earned // 10}.")
         else:
             print("You don`t have money.")
 
     def visit_phone(self, seller):
-        if seller.money > 0:
-            self.money += seller.money // 5
-            seller.money -= seller.money // 5
-            print(f"I took tax : {seller.money // 5}.")
+        if seller.money_earned > 0:
+            self.money += seller.money_earned // 5
+            seller.money_earned -= seller.money_earned // 5
+            print(f"I just took tax : {seller.money_earned // 5}.")
         else:
             print("You don`t have money.")
 
@@ -90,7 +90,7 @@ def main():
     poor = Buyer(1000)
     rich = Buyer(100000000)
 
-    gangster =TaxCollector()
+    gangster = Gangster()
 
     bread_seller = BreadSeller()
     phone_seller = PhoneSeller()
