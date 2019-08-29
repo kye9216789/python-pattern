@@ -51,7 +51,7 @@ class Buyer(AbstractVisitor):
             self.num_goods += 1
             print("I bought bread.")
         else:
-            print("Too expensive. I don`t have enought money.")
+            print("Too expensive. I don`t have enough money.")
 
     def visit_phone(self, seller):
         if seller.phone_price < self.money:
@@ -60,7 +60,7 @@ class Buyer(AbstractVisitor):
             self.num_goods += 1
             print("I bought a cell phone.")
         else:
-            print("Too expensive. I don`t have enought money.")
+            print("Too expensive. I don`t have enough money.")
 
 
 class Gangster(AbstractVisitor):
@@ -72,17 +72,17 @@ class Gangster(AbstractVisitor):
         if seller.money_earned > 0:
             self.money += seller.money_earned // 10
             seller.money_earned -= seller.money_earned // 10
-            print(f"I just took tax : {seller.money_earned // 10}.")
+            print(f"Money or life!! : {seller.money_earned // 10}.")
         else:
-            print("You don`t have money.")
+            print("Earn more money for me! I will come to you again!")
 
     def visit_phone(self, seller):
         if seller.money_earned > 0:
             self.money += seller.money_earned // 5
             seller.money_earned -= seller.money_earned // 5
-            print(f"I just took tax : {seller.money_earned // 5}.")
+            print(f"Money or life!! : {seller.money_earned // 5}.")
         else:
-            print("You don`t have money.")
+            print("Earn more money for me! I will come to you again!")
 
 
 def main():
