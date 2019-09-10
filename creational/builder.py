@@ -1,14 +1,10 @@
 from abc import ABC, abstractmethod
 
 
-class PhoneBuilder(ABC):
+class AbstractProductionLine(ABC):
 
-    def __init__(self):
-        self.phone = {}
-
-    @abstractmethod
-    def reset(self):
-        pass
+    def __init__(self, name):
+        self.phone = {"name": name}
 
     @abstractmethod
     def set_memory(self):
@@ -22,18 +18,14 @@ class PhoneBuilder(ABC):
     def set_spen(self):
         pass
 
-    def get_result(self):
+    def get_product(self):
         return self.phone
 
 
-class GalaxySBuilder(PhoneBuilder):
+class GalaxySProductionLine(AbstractProductionLine):
 
     def __init__(self):
-        super().__init__()
-        self.reset()
-
-    def reset(self):
-        self.phone["name"] = 'Galaxy S'
+        super().__init__("Galaxy S")
 
     def set_memory(self, size):
         self.phone["memory"] = size
@@ -45,14 +37,10 @@ class GalaxySBuilder(PhoneBuilder):
         print("Galaxy S does not supports S pen.")
 
 
-class GalaxyNoteBuilder(PhoneBuilder):
+class GalaxyNoteProductionLine(AbstractProductionLine):
 
     def __init__(self):
-        super().__init__()
-        self.reset()
-
-    def reset(self):
-        self.phone["name"] = 'Galaxy Note'
+        super().__init__("Galaxy Note")
 
     def set_memory(self, size):
         self.phone["memory"] = size
@@ -64,21 +52,21 @@ class GalaxyNoteBuilder(PhoneBuilder):
         self.phone["pen"] = "S-pen"
 
 
-class SamsungMobile:
-    galaxy_s_builder = GalaxySBuilder()
-    galaxy_note_builder = GalaxyNoteBuilder()
+class MobilePhoneTeam:
+    galaxy_s_line = GalaxySProductionLine()
+    galaxy_note_line = GalaxyNoteProductionLine()
 
     def make_galaxy_s(self):
-        self.galaxy_s_builder.set_memory(6)
-        self.galaxy_s_builder.set_display_type("LCD")
-        self.galaxy_s_builder.set_spen()
-        return self.galaxy_s_builder.get_result()
+        self.galaxy_s_line.set_memory(6)
+        self.galaxy_s_line.set_display_type("LCD")
+        self.galaxy_s_line.set_spen()
+        return self.galaxy_s_line.get_product()
 
     def make_galaxy_note(self):
-        self.galaxy_note_builder.set_memory(12)
-        self.galaxy_note_builder.set_display_type("AMOLED")
-        self.galaxy_note_builder.set_spen()
-        return self.galaxy_note_builder.get_result()
+        self.galaxy_note_line.set_memory(12)
+        self.galaxy_note_line.set_display_type("AMOLED")
+        self.galaxy_note_line.set_spen()
+        return self.galaxy_note_line.get_product()
 
 
 def main():
