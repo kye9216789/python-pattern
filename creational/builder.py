@@ -7,16 +7,14 @@ class AbstractProductionLine(ABC):
         self.phone = {"name": name}
 
     @abstractmethod
-    def set_memory(self):
-        pass
-
-    @abstractmethod
-    def set_display_type(self):
-        pass
-
-    @abstractmethod
     def set_spen(self):
         pass
+
+    def set_memory(self, size):
+        self.phone["memory"] = size
+
+    def set_display_type(self, display_type):
+        self.phone["display"] = display_type
 
     def get_product(self):
         return self.phone
@@ -27,14 +25,8 @@ class GalaxySProductionLine(AbstractProductionLine):
     def __init__(self):
         super().__init__("Galaxy S")
 
-    def set_memory(self, size):
-        self.phone["memory"] = size
-
-    def set_display_type(self, display_type):
-        self.phone["display"] = display_type
-
     def set_spen(self):
-        print("Galaxy S does not supports S pen.")
+        pass
 
 
 class GalaxyNoteProductionLine(AbstractProductionLine):
@@ -42,37 +34,45 @@ class GalaxyNoteProductionLine(AbstractProductionLine):
     def __init__(self):
         super().__init__("Galaxy Note")
 
-    def set_memory(self, size):
-        self.phone["memory"] = size
-
-    def set_display_type(self, display_type):
-        self.phone["display"] = display_type
-
-    def set_spen(self):
-        self.phone["pen"] = "S-pen"
+    def set_spen(self, pen):
+        self.phone["pen"] = pen
 
 
 class MobilePhoneTeam:
-    galaxy_s_line = GalaxySProductionLine()
-    galaxy_note_line = GalaxyNoteProductionLine()
 
-    def make_galaxy_s(self):
-        self.galaxy_s_line.set_memory(6)
-        self.galaxy_s_line.set_display_type("LCD")
-        self.galaxy_s_line.set_spen()
-        return self.galaxy_s_line.get_product()
-
-    def make_galaxy_note(self):
-        self.galaxy_note_line.set_memory(12)
-        self.galaxy_note_line.set_display_type("AMOLED")
-        self.galaxy_note_line.set_spen()
-        return self.galaxy_note_line.get_product()
+    def make_phone(self, production_line, pd_cfg):
+        production_line.set_memory(pd_cfg["memory"])
+        production_line.set_display_type(pd_cfg["display"])
+        if "pen" in pd_cfg.keys():
+            production_line.set_spen(pd_cfg["pen"])
+        return production_line
 
 
 def main():
-    director = SamsungMobile()
-    galaxy_s = director.make_galaxy_s()
-    galaxy_note = director.make_galaxy_note()
+    director = MobilePhoneTeam()
+
+    galaxy_s_order = {
+        "memory":6,
+        "display":"LCD"
+    }
+
+    galaxy_note_order = {
+        "memory":8,
+        "display":"AMOLED",
+        "pen":"S-pen"
+    }
+
+    galaxy_s_line = director.make_phone(
+        GalaxySProductionLine(),
+        galaxy_s_order
+    )
+    galaxy_note_line = director.make_phone(
+        GalaxyNoteProductionLine(),
+        galaxy_note_order
+    )
+
+    galaxy_s = galaxy_s_line.get_product()
+    galaxy_note = galaxy_note_line.get_product()
 
     for k in galaxy_s.keys():
         print(f'{k}: {galaxy_s[k]}')
