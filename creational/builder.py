@@ -40,7 +40,7 @@ class GalaxyNoteProductionLine(AbstractProductionLine):
 
 class MobilePhoneTeam:
 
-    def make_phone(self, production_line, pd_cfg):
+    def set_production_line(self, production_line, pd_cfg):
         production_line.set_memory(pd_cfg["memory"])
         production_line.set_display_type(pd_cfg["display"])
         if "pen" in pd_cfg.keys():
@@ -62,11 +62,11 @@ def main():
         "pen":"S-pen"
     }
 
-    galaxy_s_line = director.make_phone(
+    galaxy_s_line = director.set_production_line(
         GalaxySProductionLine(),
         galaxy_s_order
     )
-    galaxy_note_line = director.make_phone(
+    galaxy_note_line = director.set_production_line(
         GalaxyNoteProductionLine(),
         galaxy_note_order
     )
