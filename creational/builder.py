@@ -38,41 +38,37 @@ class GalaxyNoteProductionLine(AbstractProductionLine):
         self.phone["pen"] = pen
 
 
-class MobilePhoneTeam:
+class PhoneShop:
 
-    def set_production_line(self, production_line, pd_cfg):
-        production_line.set_memory(pd_cfg["memory"])
-        production_line.set_display_type(pd_cfg["display"])
+    def __init__(self, production_line):
+        self.production_line = production_line
+
+    def make_phone(self, pd_cfg):
+        self.production_line.set_memory(pd_cfg["memory"])
+        self.production_line.set_display_type(pd_cfg["display"])
         if "pen" in pd_cfg.keys():
-            production_line.set_spen(pd_cfg["pen"])
-        return production_line
+            self.production_line.set_spen(pd_cfg["pen"])
 
 
 def main():
-    director = MobilePhoneTeam()
 
     galaxy_s_order = {
         "memory":6,
         "display":"LCD"
     }
-
     galaxy_note_order = {
         "memory":8,
         "display":"AMOLED",
         "pen":"S-pen"
     }
 
-    galaxy_s_line = director.set_production_line(
-        GalaxySProductionLine(),
-        galaxy_s_order
-    )
-    galaxy_note_line = director.set_production_line(
-        GalaxyNoteProductionLine(),
-        galaxy_note_order
-    )
+    galaxy_s_shop = PhoneShop(GalaxySProductionLine())
+    galaxy_s_shop.make_phone(galaxy_s_order)
+    galaxy_s = galaxy_s_shop.production_line.get_product()
 
-    galaxy_s = galaxy_s_line.get_product()
-    galaxy_note = galaxy_note_line.get_product()
+    galaxy_note_shop = PhoneShop(GalaxyNoteProductionLine())
+    galaxy_note_shop.make_phone(galaxy_note_order)
+    galaxy_note = galaxy_note_shop.production_line.get_product()
 
     for k in galaxy_s.keys():
         print(f'{k}: {galaxy_s[k]}')
