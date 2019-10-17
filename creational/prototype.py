@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-
 topping_dict = dict(
     cheese=500,
     kimchi=500,
@@ -15,6 +14,7 @@ class AbstractPrototypeFood(ABC):
     @abstractmethod
     def clone(self):
         pass
+
 
 class Ramen(ABC):
 
