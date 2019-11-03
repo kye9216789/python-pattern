@@ -9,7 +9,15 @@ class Singleton:
             cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
         return cls._instance
 
-a = Singleton()
-b = Singleton()
 
-print(id(a), id(b))
+
+def main():
+    a = Singleton()
+    b = Singleton()
+
+    print(f'ID of first instance : {id(a)}')
+    print(f'ID of second instance : {id(b)}')
+
+
+if __name__ == "__main__":
+    main()
